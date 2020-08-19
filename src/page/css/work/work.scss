@@ -1,0 +1,42 @@
+#title {
+  height: 50px;
+  text-align: center; line-height: 50px;
+  font-size: 22px;
+}
+
+#tab {
+  padding-top: 5px;
+  height: 40px;
+  background-color: #eee;
+}
+#tab>span {
+  display: inline-block;
+  width: 100px; height: 35px;
+  text-align: center; line-height: 35px;
+  border-radius: 5px;
+}
+#tab>span.active {
+  background-color: #fff; color: #368def;
+}
+
+.content {
+  display: none;
+  padding: 0 16px 0;
+}
+.content.active {
+  display: block;
+}
+.content>p {
+  height: 50px;
+  text-align: center; line-height: 50px;
+  font-size: 18px;
+}
+.content>div {
+  margin-top: 5px;
+}
+.content>video {
+  width: 100%;
+}
+.content img {
+  max-width: 100%;
+}

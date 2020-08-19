@@ -1,0 +1,73 @@
+/*
+ * 文件描述：通用样式
+ * 创建人：卢信桥
+ * 创建时间：2018-11-13
+*/
+html,body {
+  width: 100%;
+  height: 100%;
+}
+* {
+  margin: 0; padding: 0;
+  color: #555;
+  font-size: 16px;
+  outline: none;
+  box-sizing: border-box;
+  font-family: "PingFangSC-Regular",sans-serif,"Microsoft Yahei";
+}
+li {
+  list-style-type: none;
+}
+button {
+  border: none;
+}
+iframe {
+  float: left;
+  width: 100%; height: 100%;
+  border: none;
+}
+#app {
+  width: 100%; height: 100%;
+}
+.pos_fixed {
+  position: fixed;
+}
+.pos_absolute {
+  position: absolute;
+}
+.pos_relative {
+  position: relative;
+}
+.flex-center {
+  display: flex;
+  align-items: center; justify-content: center;
+}
+.SimHei {
+  font-family: SimHei;
+}
+
+header {
+  display:none;
+  background-color: white;
+  position: fixed;
+  z-index:1;
+  top: 0;
+  width: 100%; height: 44px;
+  text-align: center; line-height: 44px;
+  font-size: 16px;
+}
+
+header .back {
+  position: absolute;
+  left: 0;
+  height: 44px;
+  padding: 0 0 0 20px;
+  line-height: 44px;
+  font-size: 16px;
+  color: white;
+  display: flex; justify-content: center; align-items: center;
+}
+
+header img {
+  width: 18px; height: 18px;
+}
