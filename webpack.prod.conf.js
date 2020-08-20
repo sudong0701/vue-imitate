@@ -35,7 +35,7 @@ var config =  {
     //入口文件配置
     entry: {
         app: ['babel-polyfill', './src/main.ts'],
-        // vendor: ['jquery']
+        vendor: ['vue']
     },
     //输出文件配置
     output: {
@@ -193,20 +193,20 @@ var config =  {
             }),
             new OptimizeCSSAssetsPlugin({})
         ],
-        // splitChunks: {   //拆分依赖库的代码 将逻辑代码和依赖库代码分离
-        //     chunks: 'initial', // 只对入口文件处理
-        //     cacheGroups:{
-        //         vendors: {
-        //             test: /node_modules\//,
-        //             name: 'vendor',
-        //             priority: 10,
-        //             enforce: true,
-        //         }
-        //     }
-        // },
-        // runtimeChunk: {
-        //     name: 'manifest'
-        // }
+        splitChunks: {   //拆分依赖库的代码 将逻辑代码和依赖库代码分离
+            chunks: 'initial', // 只对入口文件处理
+            cacheGroups:{
+                vendors: {
+                    test: /node_modules\//,
+                    name: 'vendor',
+                    priority: 10,
+                    enforce: true,
+                }
+            }
+        },
+        runtimeChunk: {
+            name: 'manifest'
+        }
     },
     //Plugins插件配置
     plugins: [

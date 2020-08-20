@@ -42,7 +42,7 @@ axios.interceptors.response.use(
                 return '服务器错误，请联系管理员'
             }
         }
-        return error.response.data
+        return error.data
     }
 )
 
@@ -140,6 +140,4 @@ function objArgs(obj) {
     return url; // 返回
 }
 
-export {
-    axios
-}
+export default axios
