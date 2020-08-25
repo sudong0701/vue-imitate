@@ -58,7 +58,7 @@ var config = {
     },
     // 开发工具
     devtool: 'eval-source-map',   //增加sourcemap 方便开发调试
-    module: {   //加载器 loader配置项
+    module: {   //加载器 loader配置项  loader主要用来做模块转换 将非js模块转换为js能支持的模块
         rules: [
             {
                 test: require.resolve('jquery'),
@@ -185,7 +185,7 @@ var config = {
     },
     //Plugins插件配置
     plugins: [
-        new HtmlWebpackPlugin({
+        new HtmlWebpackPlugin({   //处理html 该插件会自动将当前打包的资源(js、css)自动引用到html文件中
             filename: 'index.html',   //输出文件的名称
             template: path.resolve(__dirname, 'index.html'),   //模板文件的路径
             title: '主页',   //配置生成页面的标题
@@ -204,7 +204,7 @@ var config = {
         historyApiFallback: true,   //当使用 HTML5 History API 时，任意的 404 响应都可能需要被替代为 index.html
         host: ip,   //配置DevServer服务器监听的地址
         open: 'chrome',
-        hot: true,
+        hot: true,   //热更新
         inline: true,
         overlay: true,    //是否在浏览器全屏显示编译的errors或warnings 默认关闭
         clientLogLevel: "none",   //关闭console日志打印
@@ -225,7 +225,7 @@ var config = {
 
 var directories = getDirectories()
 directories.map((item)=> {
-    // 每个页面生成一个entry，如果需要HotUpdate，在这里修改entry
+    // 每个页面生成一个entry
     const entryName = item.jsFile.substring(item.jsFile.indexOf('js/')+3, item.jsFile.indexOf('.'))
     config.entry[entryName] = `./src/page/${item.jsFile}`
     // 每个页面生成一个html
@@ -238,7 +238,7 @@ directories.map((item)=> {
         inject: true,
         chunks: [entryName]
     })
-    config.devServer.after = ()=> {}
+    config.devServer.after = ()=> {}    //防止多次打开浏览器
     config.plugins.push(plugin);
 })
 

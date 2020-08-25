@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");   //分离css
 const CleanWebpackPlugin = require('clean-webpack-plugin');   //防止打包重复生成js文件
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');   //压缩代码
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');    //压缩css代码
 const copyWebpackPlugin = require('copy-webpack-plugin');    //打包静态资源 static文件夹内的文件
 const glob = require('glob')
 const postcss = require('./postcss.config');
@@ -74,7 +74,7 @@ var config =  {
             {
                 test: /\.css$/,
                 use: [
-                    MiniCssExtractPlugin.loader,
+                    MiniCssExtractPlugin.loader,      //MiniCssExtractPlugin loader新增配置项
                     {
                     loader: "css-loader"
                 }, {
@@ -93,7 +93,7 @@ var config =  {
             {
                 test: /\.scss$/,
                 use: [
-                    MiniCssExtractPlugin.loader,
+                    MiniCssExtractPlugin.loader,    //MiniCssExtractPlugin loader新增配置项
                     {
                     loader: "css-loader"
                 }, {
@@ -184,7 +184,7 @@ var config =  {
         ]
     },
     //webpack4新增配置项
-    optimization: {
+    optimization: {   //公共模块打包
         minimizer: [ // 用于配置 minimizers 和选项
             new UglifyJsPlugin({
                 cache: true,
@@ -194,8 +194,8 @@ var config =  {
             new OptimizeCSSAssetsPlugin({})
         ],
         splitChunks: {   //拆分依赖库的代码 将逻辑代码和依赖库代码分离
-            chunks: 'initial', // 只对入口文件处理
-            cacheGroups:{
+            chunks: 'initial', // 只对入口文件处理  initial 处理入口文件、 async 按需加载模块、 all 全部模块
+            cacheGroups:{   //缓存组
                 vendors: {
                     test: /node_modules\//,
                     name: 'vendor',
@@ -210,12 +210,13 @@ var config =  {
     },
     //Plugins插件配置
     plugins: [
-        new CleanWebpackPlugin(),
+        new CleanWebpackPlugin(),   //打包前清除之前dist目录下的文件 需要安装clean-webpack-plugin插件
         new webpack.HashedModuleIdsPlugin(),   //实现持久化缓存
         new HtmlWebpackPlugin({
             filename: 'index.html',   //输出文件的名称
             template: path.resolve(__dirname, 'index.html'),   //模板文件的路径
             title: '主页',   //配置生成页面的标题
+            inject: true,   //js注入式选项 true(默认) script在body底部、body同true、head script在head标签内、false 不插入生成的js文件,只单纯生成一个html文件
             minify:{   //压缩html
                 removeRedundantAttributes:true, // 删除多余的属性
                 collapseWhitespace:true, // 折叠空白区域
@@ -223,9 +224,10 @@ var config =  {
                 removeComments: true, // 移除注释
                 collapseBooleanAttributes: true // 省略只有 boolean 值的属性值 例如：readonly checked
             },
-            chunks: ['app', 'manifest', 'app~b80/b80']
+            chunks: ['app', 'manifest', 'app~b80/b80']   //主要用于多入口文件 可以选择将那些js文件引入到html页面中
+            //excludeChunks: [],    //与chunks作用相反 哪些js文件不会引入到html中
         }),
-        new MiniCssExtractPlugin({
+        new MiniCssExtractPlugin({    //提取压缩css 需要同时配置loader和plugin
             filename: 'css/[name].[hash].css',
             chunkFilename: 'css/[name].[hash].css',
         }),
