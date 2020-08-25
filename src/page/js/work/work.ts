@@ -1,11 +1,12 @@
 /// <reference path="../../../typing/index.d.ts" />   
 
-import '@/page/css/work/work.scss';
+import '@/page/css/work/work.scss';   //引入scss文件
 
 declare global {
     interface Window { 
         axios: any; 
         Router: any
+        Vue: any
     }
 }
 
@@ -33,7 +34,6 @@ class work {
             this.changeTab('info')
             window.Router.push('main/main')
         })
-        console.log(window.Router)
     }
     /**
      切换tab页
@@ -59,5 +59,19 @@ class work {
 $(function () {
     CommonUtils.setHtmlTitle('操作指南')
     new work()
+    new Vue({
+        el: 'app',
+        data: {
+            text: 'hello world',
+            className: 'green',
+            bgColor: '#5a96ec'
+        },
+        methods: {
+            reset() {
+                this.className = 'red'
+                this.bgColor = '#67c23a'
+            }
+        }
+    })
 })
 

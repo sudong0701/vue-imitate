@@ -13,8 +13,11 @@
     <div id='actionContent' class='content active'>
         <p></p>
         <div></div>
+        <input type="text" v-model="text">
+        <span :class="`newClass ${className oldName}`" :style="`color: ${className}; background: ${bgColor}`">{{text}}</span>
+        <button @click="reset">清除</button>
     </div>
-    <div id='questionContent' class='content'>
+    <div id='questionContent' class='content' >
         <p></p>
         <div></div>
     </div>
@@ -24,4 +27,13 @@
     </div>
 </div>
 </body>
+<script type="text/javascript">
+    Function.prototype.myCall = function (content, arg) {
+        content = content || window
+        content.fn = this
+        let result = content.fn(arg)
+        delete content.fn
+        return result
+    }
+</script>
 </html>
