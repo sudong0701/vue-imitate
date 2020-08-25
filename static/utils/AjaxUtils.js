@@ -1,6 +1,5 @@
 /*
  * 文件描述：ajax请求
- * 创建人：卢信桥
  * 创建时间：2018-11-13
 */
 
@@ -18,8 +17,8 @@ var AjaxUtils = {
         }
         $.ajax({
             headers: {
-                'REQUESTAPP': param.header.REQUESTAPP, //APP编号：澜渟-1，澜渟私教-2，澜婷医生-3；
-                'REQUESTCLIENT': param.header.REQUESTCLIENT, //客户端类型编号：Android-1，iOS-2，PC-3，H5-4，小程序-5，公众号-6;
+                'REQUESTAPP': param.header.REQUESTAPP,
+                'REQUESTCLIENT': param.header.REQUESTCLIENT,
                 'Content-Type': 'application/json'
             },
             async: param.async,
@@ -56,8 +55,8 @@ var AjaxUtils = {
         }
         $.ajax({
             headers: {
-                'REQUESTAPP': param.header.REQUESTAPP, //APP编号：澜渟-1，澜渟私教-2，澜婷医生-3；
-                'REQUESTCLIENT': param.header.REQUESTCLIENT, //客户端类型编号：Android-1，iOS-2，PC-3，H5-4，小程序-5，公众号-6;
+                'REQUESTAPP': param.header.REQUESTAPP,
+                'REQUESTCLIENT': param.header.REQUESTCLIENT,
                 'Content-Type': 'application/json'
             },
             async: true,
@@ -170,8 +169,5 @@ function objArgs(obj) {
     return url; // 返回
 }
 
-// export {
-//     AjaxUtils
-// }
 
 
