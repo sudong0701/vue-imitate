@@ -1,6 +1,7 @@
-/// <reference path="../../../typing/index.d.ts" />   
+/// <reference path="../../../typing/index.d.ts" />
 
 import '@/page/css/work/work.scss';   //引入scss文件
+
 
 declare global {
     interface Window { 

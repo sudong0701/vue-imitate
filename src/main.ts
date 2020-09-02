@@ -1,7 +1,15 @@
+
+
 import '@/page/css/common/common.scss'
 import axios from './utils/axios'
 
 require('@/router/index')
+require('@/utils/VDom')
+require('@/utils/diff')
+require('@/utils/parseHTML')
+const { VDom }  = require('@/utils/VDom')
+const { patchDom }  = require('@/utils/patch')
+let $dom, tree
 
 window['axios'] = axios
 
@@ -17,10 +25,13 @@ class Vue {
         this.init($('#' + el)[0], data)
     }
     init(el, data) {
+        let template = document.getElementsByTagName('template')[0].innerHTML.trim()
+        let vDom  = new window['ParseHTML'](template)
         this.childNodes = []
-        this.getAllChildNodes(el)
         this.observe(this, data)
-        this.compile()
+        tree = this.compile(vDom)
+        $dom = tree.render();
+        $('#app').append($dom)
     }
     observe(root, data) {
         for(let key in data) {
@@ -46,84 +57,73 @@ class Vue {
             }
         })
     }
-    compile() {
-        for(const node of this.childNodes) {
-            const reg = /\{\{(.*)\}\}/    //匹配{{}}
-            const templateReg = /\`(.*)\`/   //匹配模板字符串
-            const variableReg = /\$\{(.*)\}/   //匹配${}
-            let removeAttrs = []
-            if(node.nodeType === 1) {    //如果为元素节点
-                const match = node.innerHTML.match(reg)
-                if(match && !node.childNodes) {   //如果使用了{{}}语法
-                    const name = match[1].trim()
-                    this.target = new Watcher(node, 'textTag')
-                    this[name]
-                }
-                const attrs = node.attributes
-                for(let attr of attrs) {
-                    if(attr.name === 'v-model') {   //v-model双向绑定
-                        if(node.nodeName === 'INPUT') {
-                            this.target = new Watcher(node, 'input')
-                            node.addEventListener('input', (e)=> {
-                                this[attr.value] = e.target.value
-                            })
-                            node.setAttribute('value', this[attr.value] ? this[attr.value] : '')
-                        }
+    compile(vDom) {
+        const reg = /\{\{(.*)\}\}/    //匹配{{}}
+        const templateReg = /\`(.*)\`/   //匹配模板字符串
+        const variableReg = /\$\{(.*)\}/   //匹配${}
+        for(let attr in vDom.props) {
+            if(attr === 'v-model') {   //v-model双向绑定
+                if(vDom.tagName === 'input') {
+                    this.target = new Watcher(vDom, 'input')
+                    vDom.methods['input'] = (e)=> {
+                        this[vDom.props[attr]] = e.target.value
                     }
-                    if(attr.name.indexOf('@') > -1) {
-                        node.addEventListener(`${attr.name.substring(attr.name.indexOf('@') + 1)}`, this.methods[attr.value].bind(this))
-                    }
-                    if(attr.name.indexOf(':') > -1) {
-                        if(attr.name.substring(1) === 'style') {
-                            let attrValue = attr.value.replace(/`/g, '').split(';')
-                            attrValue.map((item)=> {
-                                let styleName = item.split(':')[0].trim(), styleValue = item.split(':')[1].trim()
-                                const match = styleValue.match(variableReg)
-                                if(match) {
-                                    this.target = new Watcher(node, 'style', styleName)
-                                    node.style[styleName] = this[match[1]]
-                                }
-                            })
-                        } else {
-                            const template = attr.value.match(templateReg)
-                            if(template) {   //如果为模板字符串
-                                const match = attr.value.match(variableReg)
-                                let remainder = attr.value.replace(variableReg, '').replace(/`/g, '')
-                                if(match) {
-                                    const matchArr = match[1].split(' ')
-                                    matchArr.map((item)=> {
-                                        this.target = new Watcher(node, 'bind', attr.name.substring(1), item)
-                                        remainder += this[item] ? this[item] : ''
-                                    })
-                                }
-                                node.setAttribute(attr.name.substring(1), remainder)
-                                removeAttrs.push(attr.name)
-                            }
-                        }
-                    }
-                }
-            } else if(node.nodeType === 3) {   //文本节点
-                const match = node.nodeValue.match(reg)
-                if(match) {   //如果使用了{{}}语法
-                    this.target = new Watcher(node, 'text')
-                    const name = match[1].trim()
-                    node.nodeValue = this[name]
+                    vDom.props.value = this[vDom.props[attr]] ? this[vDom.props[attr]] : ''
                 }
             }
-            removeAttrs.map((item)=> {
-                node.removeAttribute(item)
+            if(attr.indexOf('@') === 0) {
+                if(!vDom.methods) {
+                    vDom.methods = {}
+                }
+                vDom.methods[attr.substring(1)] = this.methods[vDom.props[attr]].bind(this)
+                delete vDom.props[attr]
+            }
+            if(attr.indexOf(':') > -1) {
+                if(attr.substring(1) === 'style') {
+                    vDom.props['style'] = ''
+                    let attrValue =  vDom.props[attr].replace(/`/g, '').split(';')
+                    attrValue.map((item, key)=> {
+                        let styleName = item.split(':')[0].trim(), styleValue = item.split(':')[1].trim()
+                        const match = styleValue.match(variableReg)
+                        if(match) {
+                            this.target = new Watcher(vDom, 'style', styleName)
+                            vDom.props['style'] = `${vDom.props['style']}${key > 0 ? '; ' : ''}${styleName}: ${this[match[1]]}`
+                            delete vDom.props[':style']
+                        }
+                    })
+                } else {
+                    const template = vDom.props[attr].match(templateReg)
+                    if(template) {   //如果为模板字符串
+                        const match = vDom.props[attr].match(variableReg)
+                        let remainder = vDom.props[attr].replace(variableReg, '').replace(/`/g, '')
+                        if(match) {
+                            const matchArr = match[1].split(' ')
+                            matchArr.map((item)=> {
+                                this.target = new Watcher(vDom, 'bind', attr.substring(1), item)
+                                remainder += this[item] ? this[item] : ''
+                            })
+                        }
+                        vDom.props[attr.substring(1)] = remainder
+                        delete vDom.props[attr]
+                    }
+                }
+            }
+        }
+        if(vDom.children) {   //如果存在子节点
+            vDom.children.forEach((child, key)=> {
+                if(child instanceof VDom) {   //如果子元素也为VDom则递归
+                    this.compile(child)
+                } else {
+                    const match = child.match(reg)
+                    if(match) {
+                        const name = match[1].trim()
+                        this.target = new Watcher(vDom, 'textTag', key)
+                        vDom.children[key] = this[name]
+                    }
+                }
             })
         }
-
-    }
-    getAllChildNodes(el) {
-        this.childNodes.push(el)
-        if(el.childNodes) {
-            for(const node of el.childNodes) {
-                this.getAllChildNodes(node)
-            }
-        }
-        return this.childNodes
+        return vDom
     }
 }
 
@@ -145,35 +145,40 @@ class Dispatcher {   //发布者
 }
 
 class Watcher {    //订阅者
-    node: any
+    vDom: any
     type: any
-    name: any
+    remake: any
     attrKey: any
     attrValue: any
-    constructor(node, type, name='', attrKey='') {
-        this.node = node
+    constructor(vDom, type, remake?, attrKey?) {
+        this.vDom = vDom
         this.type = type
-        this.name = name
+        this.remake = remake
         this.attrKey = attrKey
     }
     update(oldValue, value) {
+        let preVDom = JSON.parse(JSON.stringify(tree))
         if(this.type === 'input') {
-            this.node.value = value
+            this.vDom.props.value = value
         }
         if(this.type === 'textTag') {
-            this.node.innerHTML = value
-        }
-        if(this.type === 'text') {
-            this.node.nodeValue = value
+            this.vDom.children[this.remake] = value
         }
         if(this.type === 'bind') {
-            let preAttr: string = this.node.attributes[this.name].value
-            this.node.setAttribute(this.name, preAttr.replace(oldValue, value))
-            this.attrValue = value
+            this.vDom.props[this.remake] = this.vDom.props[this.remake].replace(oldValue, value)
         }
         if(this.type === 'style') {
-            this.node.style[this.name] = value
+            let styleArr =  this.vDom.props.style.split(';'), newStyle = []
+            styleArr.map((item)=> {
+                if(item.indexOf(this.remake) > -1) {
+                    item = item.replace(oldValue, value)
+                }
+                newStyle.push(item)
+            })
+            this.vDom.props.style = newStyle.join(';')
         }
+        const patches = new window['diff'](preVDom, tree);   //根据diff算法得出新旧dom数的区别对象
+        patchDom($dom, patches);   //根据变化了的部分去更新DOM
     }
 }
 
