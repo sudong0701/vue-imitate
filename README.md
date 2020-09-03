@@ -26,4 +26,19 @@ webpack4.X打包源生js多页面项目，路由模式为hash路由。支持npm 
     </div>
 </template>
 ```
+### 2020.09.03
+新增 v-if和v-show控制元素显隐,v-show为设置元素display:none;v-if则元素不会渲染，示例参考page/js/main.ts和page/app/main.html
+```
+<template>
+    <div class="main">
+        <p v-show="isShow">111</p>
+        <p v-if="isShow">
+           <span>
+               <img src="https://res.wx.qq.com/wxdoc/dist/assets/img/0.4cb08bb4.jpg" alt="">
+           </span>
+        </p>
+        <button @click="reset">控制显隐</button>
+    </div>
+</template>
+```
 
