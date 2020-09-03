@@ -5,3 +5,25 @@ webpack4.X打包源生js多页面项目，路由模式为hash路由。支持npm 
 
 ### 2020.08.25
 新增低仿版mvvm
+
+### 2020.09.02
+新增丐版Virtual DOM(虚拟Dom)及template模板编译成虚拟Dom类,同时和MVVM集成一起,当数据更新时通过简版diff算法更新视图
+待解决：目前对于‘：’语法要求苛刻，必须通过模板字符串的方法，示例：
+```
+<template>
+    <div class="detail" :style="background: ${bgColor}`">
+        <p :class="`${className}`">春江潮水连海平</p>
+        <p>{{text}}</p>
+        <input type="text" v-model="text">
+        <div>
+            <p @click="reset">海上明月共潮生</p>
+            <span>滟滟随波千万里</span>
+            <div>
+                <p style="color: #5a96ec">何处春江无月明</p>
+                <p>江流宛转绕芳甸</p>
+            </div>
+        </div>
+    </div>
+</template>
+```
+
