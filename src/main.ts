@@ -18,10 +18,12 @@ class Vue {
     target: any
     childNodes: any
     data: any
+    hideElement: any[]
     constructor(options) {
         const {el, data, methods} = options
         this.methods = methods
         this.data = data
+        this.hideElement = []
         this.init($('#' + el)[0], data)
     }
     init(el, data) {
@@ -30,8 +32,12 @@ class Vue {
         this.childNodes = []
         this.observe(this, data)
         tree = this.compile(vDom)
+        this.hideElement.map((item)=> {
+            item.dom.children.splice(item.key, 1)
+        })
         $dom = tree.render();
         $('#app').append($dom)
+        document.getElementsByTagName('template')[0].remove()
     }
     observe(root, data) {
         for(let key in data) {
@@ -57,10 +63,11 @@ class Vue {
             }
         })
     }
-    compile(vDom) {
+    compile(vDom, parentVDom?, childrenKey?) {
         const reg = /\{\{(.*)\}\}/    //匹配{{}}
         const templateReg = /\`(.*)\`/   //匹配模板字符串
         const variableReg = /\$\{(.*)\}/   //匹配${}
+        let hideChildren = false
         for(let attr in vDom.props) {
             if(attr === 'v-model') {   //v-model双向绑定
                 if(vDom.tagName === 'input') {
@@ -105,14 +112,30 @@ class Vue {
                         }
                         vDom.props[attr.substring(1)] = remainder
                         delete vDom.props[attr]
+                    } else {
+                        
                     }
+                }
+            }
+            if(attr === 'v-show') {
+                this.target = new Watcher(vDom, 'v-show')
+                vDom.props['style'] = `${this[vDom.props[attr]] ? '' : 'display: none;'}${vDom.props['style'] ? vDom.props['style'] : ''}`
+            }
+            if(attr === 'v-if') {
+                this.target = new Watcher(vDom, 'v-if', parentVDom, childrenKey)
+                let domIf = this[vDom.props[attr]]
+                if(domIf === false) {
+                    this.hideElement.push({
+                        dom: parentVDom,
+                        key: childrenKey
+                    })
                 }
             }
         }
         if(vDom.children) {   //如果存在子节点
             vDom.children.forEach((child, key)=> {
                 if(child instanceof VDom) {   //如果子元素也为VDom则递归
-                    this.compile(child)
+                    this.compile(child, vDom, key)
                 } else {
                     const match = child.match(reg)
                     if(match) {
@@ -176,6 +199,27 @@ class Watcher {    //订阅者
                 newStyle.push(item)
             })
             this.vDom.props.style = newStyle.join(';')
+        }
+        if(this.type === 'v-show') {
+            let styleArr = this.vDom.props.style.split(';')
+            if(value) {
+                styleArr.map((style, key)=> {
+                    if(style.indexOf('display') > -1) {
+                        styleArr.splice(key--, 1)
+                    }
+                })
+            } else {
+                styleArr.push('display: none')
+            }
+            this.vDom.props.style = styleArr.join(';')
+        }
+        if(this.type === 'v-if') {
+            //console.log(this.remake, this.attrKey)
+            if(value) {
+                this.remake.children.splice(this.attrKey, 0, this.vDom)
+            } else {
+                this.remake.children.splice(this.attrKey, 1)
+            }
         }
         const patches = new window['diff'](preVDom, tree);   //根据diff算法得出新旧dom数的区别对象
         patchDom($dom, patches);   //根据变化了的部分去更新DOM

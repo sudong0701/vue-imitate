@@ -1,8 +1,11 @@
-<html>
-<head>
-    <title>main页面</title>
-</head>
-<body>
-<div id='title'>这是main页面</div>
-</body>
-</html>
+<template>
+    <div class="main">
+        <p v-show="isShow">111</p>
+        <p v-if="isShow">
+           <span>
+               <img src="https://res.wx.qq.com/wxdoc/dist/assets/img/0.4cb08bb4.jpg" alt="">
+           </span>
+        </p>
+        <button @click="reset">控制显隐</button>
+    </div>
+</template>

@@ -1,8 +1,5 @@
 import { patch } from '@/utils/enum'
 
-
-
-
 function patchDom($dom, patches) {
     const index = {
         value: 0
@@ -30,13 +27,14 @@ function dfsWalkDom($node, index, patches, isEnd:boolean = false) {
                     $node.textContent = p.value
                     break
                 case patch.NODE_REPLACE:
-                    $node.replaceWith(p.value.render())   
+                    $node.replaceWith(p.value.render())
+                    isEnd = true
                     break
                 case patch.NODE_DELETE:
                     $node.remove()
+                    isEnd = true
                     break 
-                default: 
-                    console.log(p)
+                default:
                     break                   
             }
         })

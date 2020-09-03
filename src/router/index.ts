@@ -65,7 +65,6 @@ class Router {
         const routeObj:routeItem = this.getRoute(this.getCurrRoute())   //获取当前路由对象
         if(routeObj.type === 'chain') {
             let $lastIframe = $('#app').children('iframe:last-child')
-            console.log($lastIframe)
             if(this.getCurrRoute() === $lastIframe.attr('to')) {   //通过push跳转
                 $('#app').children('iframe').hide();   //先隐藏所有iframe
                 $lastIframe.show();   //显示最后一个iframe
