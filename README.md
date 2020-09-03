@@ -1,4 +1,4 @@
-# webpack4.0
+# simple-Vue
 
 ### 2020.08.19
 webpack4.X打包源生js多页面项目，路由模式为hash路由。支持npm run dev本地调试代码，npm run build打包项目。
