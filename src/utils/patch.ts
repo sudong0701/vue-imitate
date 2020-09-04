@@ -1,3 +1,9 @@
+/**
+ * @author sudong.duan
+ * Date: 2020.09.02
+ * description: 根据diff算法结果更新dom
+ */
+
 import { patch } from '@/utils/enum'
 
 function patchDom($dom, patches) {

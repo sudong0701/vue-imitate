@@ -1,4 +1,10 @@
- const { VDomParse }  = require('@/utils/VDom')
+/**
+ * @author sudong.duan
+ * Date: 2020.09.02
+ * description: template模板编译，将template模板编译成VDom
+ */
+
+const { VDomParse }  = require('@/utils/VDom')
 
 //匹配HTML的正则表达式
 const unicodeRegExp = /a-zA-Z\u00B7\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u037D\u037F-\u1FFF\u200C-\u200D\u203F-\u2040\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD/

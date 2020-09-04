@@ -1,4 +1,8 @@
-
+/**
+ * @author sudong.duan
+ * Updated: 2020.09.02
+ * description: 项目入口文件
+ */
 
 import '@/page/css/common/common.scss'
 import axios from './utils/axios'

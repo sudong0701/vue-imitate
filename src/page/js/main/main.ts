@@ -17,6 +17,9 @@ export default new window['Vue']({
     methods: {
         reset() {
             this.isShow = !this.isShow
+        },
+        goWork() {
+            window.Router.push('work/work')
         }
     }
 })

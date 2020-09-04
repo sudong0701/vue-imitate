@@ -1,3 +1,9 @@
+/**
+ * @author sudong.duan
+ * Date: 2020.09.02
+ * description: 简版diff算法
+ */
+
 import { patch } from '@/utils/enum'
 interface diffIndex {
     value: number

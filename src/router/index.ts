@@ -1,3 +1,9 @@
+/**
+ * @author sudong.duan
+ * Date: 2020.08.15
+ * description: hash路由
+ */
+
 interface routeItem {
     type?: string,
     route: string,

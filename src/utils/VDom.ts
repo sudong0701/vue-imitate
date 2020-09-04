@@ -1,4 +1,8 @@
-
+/**
+ * @author sudong.duan
+ * Date: 2020.09.02
+ * description: VDom(虚拟dom)类
+ */
 
 class VDom implements VDomInterface {
     tagName: ''

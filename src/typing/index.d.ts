@@ -1,3 +1,8 @@
+/**
+ * @author sudong.duan
+ * Date: 2020.09.03
+ * description: ts声明文件
+ */
 
 interface VDomInterface {
     //标签名

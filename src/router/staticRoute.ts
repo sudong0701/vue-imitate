@@ -1,3 +1,9 @@
+/**
+ * @author sudong.duan
+ * Date: 2020.09.03
+ * description: 路由配置文件
+ */
+
 interface routeChildren {
     route: string,
     url: string
