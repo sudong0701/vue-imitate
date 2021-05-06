@@ -28,7 +28,7 @@ class diff {
     constructor(oldTree: VDom, newTree: VDom) {
         this.patches = {}
         this.index = {
-            value: 0
+            value: 1
         }
         this.dfsWalk(oldTree, newTree, this.index, this.patches)
         return this.patches
@@ -55,7 +55,7 @@ class diff {
                 })
             }
         } else if(oldNode.tagName === newNode.tagName && oldNode.key === newNode.key) {   //如果新旧节点节点类型和索引一样
-            this.diffProps(oldNode.props, newNode.props, index, currentIndexPatches)   //比较属性变化
+            this.diffProps(oldNode.props, newNode.props, index, currentIndexPatches, oldNode, newNode)   //比较属性变化
             this.diffChildren(oldNode.children, newNode.children, index, currentIndexPatches, patches)   //比较子节点变化
         } else {
             currentIndexPatches.push({
@@ -76,7 +76,7 @@ class diff {
      @param {Object} currentIndexPatches 当前存储dom修改内容的对象
      @return
      */
-    diffProps(oldProps: any, newProps: any, index: diffIndex, currentIndexPatches: currentPatchItem[]): void {
+    diffProps(oldProps: any, newProps: any, index: diffIndex, currentIndexPatches: currentPatchItem[], oldNode?, newNode?): void {
         // 遍历旧的属性,找到被删除和修改的情况
         for(const propKey in oldProps) {
             //新属性中不存在该属性说明属性被删除
