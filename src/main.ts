@@ -5,7 +5,7 @@
  */
 
 import '@/page/css/common/common.scss'
-import axios from './utils/axios'
+import axios from './utils/axios.ts'
 
 require('@/router/index')
 require('@/utils/VDom')
