@@ -1,5 +1,5 @@
-# vue-imitate
-> 低仿版MVVM框架
+# vue-imitation
+> 低仿版仿Vue MVVM框架
 
 ## 日志
 
