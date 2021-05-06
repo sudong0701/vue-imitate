@@ -3,11 +3,24 @@
 
 ## 日志
 
-### 2020.08.19
-> 使用webpack4.X打包源生js多页面项目，路由模式为hash路由。支持npm run dev本地调试代码，npm run build打包项目。webpack[参考地址](https://github.com/kaivin/webpack4.x)
+### 2021.05.06
+> 解决更新VDom时，更新节点错误的bug
 
-### 2020.08.25
-新增低仿版mvvm
+### 2020.09.03
+> 新增 v-if和v-show控制元素显隐,v-show为设置元素display:none;v-if则元素不会渲染，示例参考page/js/main.ts和page/app/main.html(地址栏路由:main/main):
+```
+<template>
+    <div class="main">
+        <p v-show="isShow">111</p>
+        <p v-if="isShow">
+           <span>
+               <img src="https://res.wx.qq.com/wxdoc/dist/assets/img/0.4cb08bb4.jpg" alt="">
+           </span>
+        </p>
+        <button @click="reset">控制显隐</button>
+    </div>
+</template>
+```
 
 ### 2020.09.02
 > 新增丐版Virtual DOM(虚拟Dom)及template模板编译成虚拟Dom类,然后渲染成真实Dom,同时和MVVM集成一起,当数据更新时通过简版diff算法更新视图
@@ -29,19 +42,15 @@
     </div>
 </template>
 ```
-### 2020.09.03
-> 新增 v-if和v-show控制元素显隐,v-show为设置元素display:none;v-if则元素不会渲染，示例参考page/js/main.ts和page/app/main.html(地址栏路由:main/main):
-```
-<template>
-    <div class="main">
-        <p v-show="isShow">111</p>
-        <p v-if="isShow">
-           <span>
-               <img src="https://res.wx.qq.com/wxdoc/dist/assets/img/0.4cb08bb4.jpg" alt="">
-           </span>
-        </p>
-        <button @click="reset">控制显隐</button>
-    </div>
-</template>
-```
+
+
+### 2020.08.25
+新增低仿版mvvm
+
+### 2020.08.19
+> 使用webpack4.X打包源生js多页面项目，路由模式为hash路由。支持npm run dev本地调试代码，npm run build打包项目。webpack[参考地址](https://github.com/kaivin/webpack4.x)
+
+
+
+
 
