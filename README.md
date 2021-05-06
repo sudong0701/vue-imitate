@@ -1,4 +1,4 @@
-# simple-Vue
+# vue-imitate
 > 低仿版MVVM框架
 
 ## 日志
