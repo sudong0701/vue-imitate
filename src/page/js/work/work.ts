@@ -13,7 +13,6 @@ declare global {
 
 
 $(function () {
-    CommonUtils.setHtmlTitle('操作指南')
     new Vue({
         el: 'app',
         data: {
