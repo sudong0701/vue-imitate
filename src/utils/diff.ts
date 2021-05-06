@@ -28,7 +28,7 @@ class diff {
     constructor(oldTree: VDom, newTree: VDom) {
         this.patches = {}
         this.index = {
-            value: 1
+            value: 0
         }
         this.dfsWalk(oldTree, newTree, this.index, this.patches)
         return this.patches
