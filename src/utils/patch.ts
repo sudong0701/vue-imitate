@@ -48,14 +48,11 @@ function dfsWalkDom($node, index, patches, isEnd:boolean = false) {
     if(isEnd) {
         return
     }
-    if($node.children.length > 0) {
-        for(let i = 0; i < $node.children.length; i++) {
+    if($node.childNodes.length > 0) {
+        for(let i = 0; i < $node.childNodes.length; i++) {
             index.value++
-            dfsWalkDom($node.children[i], index, patches)
+            dfsWalkDom($node.childNodes[i], index, patches)
         }
-    } else {
-        index.value++
-        dfsWalkDom($node, index, patches, true)
     }
 }
 
